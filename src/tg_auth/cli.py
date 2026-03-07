@@ -1,6 +1,7 @@
 __all__ = ["tg"]
 
 from async_typer import AsyncTyper
+from my_modules.console import console
 
 from tg_auth.controller import Telegram
 
@@ -19,9 +20,11 @@ async def tg_login():
 
 @tg.async_command(name="logout", help="Logout from telegram and remove saved session.")
 async def tg_logout():
-    raise NotImplementedError("Logout method is not yet implement.")
+    console.error("Logout method is not yet implement.", kill=1)
+    raise NotImplementedError()
 
 
 @tg.async_command(name="verify", help="Verify current env session connectivity.")
 async def tg_verify():
-    raise NotImplementedError("Verify method is redundant. Please use login.")
+    console.error("Verify method is redundant. Please use [magenta]login[/].", kill=1)
+    raise NotImplementedError()
