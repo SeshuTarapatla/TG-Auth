@@ -1,6 +1,7 @@
 from asyncio import wait_for
 from base64 import b64decode
 from re import fullmatch
+from typing import Literal
 
 from kubernetes import client, config
 from kubernetes.config.config_exception import ConfigException
@@ -36,6 +37,10 @@ class Telegram(TelegramClient):
         else:
             _start = super().start(phone=self.phone_number)
         return await handle_await(_start)
+
+    @classmethod
+    def get_client(cls, mode: Literal["user", "bot"] = "user") -> "Telegram":
+        return cls(TelegramSecret.get()[0], bot=True if mode == "bot" else False)
 
 
 class TelegramSecret(BaseModel):
