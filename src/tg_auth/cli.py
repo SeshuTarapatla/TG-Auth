@@ -1,30 +1,34 @@
-__all__ = ["tg"]
+__all__ = ["tg_auth"]
 
 from async_typer import AsyncTyper
 from my_modules.console import console
 
-from tg_auth.controller import Telegram
+from tg_auth.controller import TelegramSecret
 
-tg = AsyncTyper(
-    name="tg",
-    help="Telegram CLI to manage session in USER environment.",
+tg_auth = AsyncTyper(
+    name="tg_auth",
+    help="A CLI tool to manage telegram session and deploy to kubernetes.",
     no_args_is_help=True,
     add_completion=False,
 )
 
 
-@tg.async_command(name="login", help="Login to telegram and save session.")
-async def tg_login():
-    await Telegram.login()
+@tg_auth.async_command(
+    "login", help="Login to telegram session and save it as kubernetes secret."
+)
+async def tg_login(secret_name: str = "tg-auth"):
+    await TelegramSecret.login()
 
 
-@tg.async_command(name="logout", help="Logout from telegram and remove saved session.")
+@tg_auth.async_command(
+    "logout", help="Logout any existing telegram session and clear kubernetes secrets."
+)
 async def tg_logout():
-    console.error("Logout method is not yet implement.", kill=1)
-    raise NotImplementedError()
+    console.error("[red]Logout[/] is not implemented yet.", kill=1)
 
 
-@tg.async_command(name="verify", help="Verify current env session connectivity.")
+@tg_auth.async_command(
+    "verify", help="Verify any existing kubernetes secret for active telegram session."
+)
 async def tg_verify():
-    console.error("Verify method is redundant. Please use [magenta]login[/].", kill=1)
-    raise NotImplementedError()
+    await TelegramSecret.verify()

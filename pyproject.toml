@@ -1,29 +1,27 @@
 [project]
 name = "tg-auth"
 version = "0.1.0"
-description = "Lightweight Python CLI for generating and validating Telegram sessions and storing credentials in Windows user environment variables."
+description = "A helper utility to manage telegram login session in K3s."
 readme = "README.md"
-authors = [
-    { name = "SeshuTarapatla", email = "seshu.tarapatla@gmail.com" }
-]
+authors = [{ name = "SeshuTarapatla", email = "seshu.tarapatla@gmail.com" }]
 requires-python = ">=3.12"
 dependencies = [
     "async-typer>=0.1.10",
+    "kubernetes>=35.0.0",
     "my-modules",
+    "pydantic>=2.12.5",
     "telethon>=1.42.0",
 ]
 
 [project.scripts]
-tg = "tg_auth:tg"
+tg-auth = "tg_auth:tg_auth"
 
 [build-system]
 requires = ["uv_build>=0.10.8,<0.11.0"]
 build-backend = "uv_build"
 
 [dependency-groups]
-dev = [
-    "ipykernel>=7.2.0",
-]
+dev = ["ipykernel>=7.2.0"]
 
 [tool.uv.sources]
 my-modules = { git = "https://github.com/SeshuTarapatla/my-modules.git" }
