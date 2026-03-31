@@ -93,13 +93,13 @@ class TelegramSecret(BaseModel):
     @overload
     @classmethod
     def get(
-        cls, secret_name: str = ..., *, strict: Literal[True]
+        cls, secret_name: str = "tg-auth", *, strict: Literal[True]
     ) -> "TelegramSecret": ...
 
     @overload
     @classmethod
     def get(
-        cls, secret_name: str = ..., *, strict: Literal[False] = False
+        cls, secret_name: str = "tg-auth", *, strict: Literal[False] = False
     ) -> tuple["TelegramSecret", bool]: ...
 
     @classmethod
