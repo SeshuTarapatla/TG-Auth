@@ -1,3 +1,5 @@
+__all__ = ["TelegramSecret"]
+
 from asyncio import wait_for
 from base64 import b64decode
 from re import fullmatch
