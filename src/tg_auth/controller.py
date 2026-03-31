@@ -1,7 +1,7 @@
 from asyncio import wait_for
 from base64 import b64decode
 from re import fullmatch
-from typing import Literal
+from typing import Literal, overload
 
 from kubernetes import client, config
 from kubernetes.config.config_exception import ConfigException
@@ -90,10 +90,22 @@ class TelegramSecret(BaseModel):
             return value
         raise ValueError(f"{value} is not a valid Telegram Session String.")
 
+    @overload
     @classmethod
     def get(
-        cls, secret_name: str = "tg-auth", strict: bool = False
-    ) -> tuple["TelegramSecret", bool]:
+        cls, secret_name: str = ..., *, strict: Literal[True]
+    ) -> "TelegramSecret": ...
+
+    @overload
+    @classmethod
+    def get(
+        cls, secret_name: str = ..., *, strict: Literal[False] = False
+    ) -> tuple["TelegramSecret", bool]: ...
+
+    @classmethod
+    def get(
+        cls, secret_name: str = "tg-auth", *, strict: bool = False
+    ) -> "TelegramSecret | tuple['TelegramSecret', bool]":
         try:
             config.load_kube_config()
         except ConfigException:
@@ -135,7 +147,7 @@ class TelegramSecret(BaseModel):
                     e.errors()[0]["msg"],
                     kill=1,
                 )
-        return secret, new
+        return secret if strict else (secret, new)
 
     def args(self) -> None: ...
 
@@ -177,7 +189,7 @@ class TelegramSecret(BaseModel):
     @classmethod
     async def verify(cls):
         try:
-            secret, _ = cls.get(strict=True)
+            secret = cls.get(strict=True)
         except SecretNotFound:
             console.error("No secret found for [red]tg-auth[/].", kill=1)
         tl = Telegram(secret, bot=False)
