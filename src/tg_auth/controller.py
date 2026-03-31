@@ -42,7 +42,7 @@ class Telegram(TelegramClient):
 
     @classmethod
     def get_client(cls, mode: Literal["user", "bot"] = "user") -> "Telegram":
-        return cls(TelegramSecret.get()[0], bot=True if mode == "bot" else False)
+        return cls(TelegramSecret.get(), bot=True if mode == "bot" else False)
 
 
 class TelegramSecret(BaseModel):
@@ -95,18 +95,18 @@ class TelegramSecret(BaseModel):
     @overload
     @classmethod
     def get(
-        cls, secret_name: str = "tg-auth", *, strict: Literal[True]
+        cls, secret_name: str = "tg-auth", *, strict: Literal[True] = True
     ) -> "TelegramSecret": ...
 
     @overload
     @classmethod
     def get(
-        cls, secret_name: str = "tg-auth", *, strict: Literal[False] = False
+        cls, secret_name: str = "tg-auth", *, strict: Literal[False]
     ) -> tuple["TelegramSecret", bool]: ...
 
     @classmethod
     def get(
-        cls, secret_name: str = "tg-auth", *, strict: bool = False
+        cls, secret_name: str = "tg-auth", *, strict: bool = True
     ) -> "TelegramSecret | tuple['TelegramSecret', bool]":
         try:
             config.load_kube_config()
@@ -155,7 +155,7 @@ class TelegramSecret(BaseModel):
 
     @classmethod
     async def login(cls):
-        secret, new = cls.get()
+        secret, new = cls.get(strict=False)
 
         tl = Telegram(secret, bot=False)
         await tl.start()
