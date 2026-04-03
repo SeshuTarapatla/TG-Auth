@@ -50,6 +50,7 @@ class TelegramSecret(BaseModel):
     TELEGRAM_API_HASH: str = ""
     TELEGRAM_NUMBER: str = ""
     TELEGRAM_SESSION: str = ""
+    TELEGRAM_BOT_NAME: str = ""
     TELEGRAM_BOT_TOKEN: str = ""
     TELEGRAM_BOT_SESSION: str = ""
 
@@ -141,6 +142,9 @@ class TelegramSecret(BaseModel):
                 secret.TELEGRAM_NUMBER = console.log_input(
                     "Please enter your Telegram Number"
                 )
+                secret.TELEGRAM_BOT_NAME = console.log_input(
+                    "Please enter your Telegram Bot Name"
+                )
                 secret.TELEGRAM_BOT_TOKEN = console.log_input(
                     "Please enter your Telegram Bot Token"
                 )
@@ -168,9 +172,9 @@ class TelegramSecret(BaseModel):
         bot_tl = Telegram(secret, bot=True)
         await bot_tl.start()
         if new:
-            console.info("New bot session. [dim green]CONNECTED![/]")
+            console.info("New bot  session. [dim green]CONNECTED![/]")
         else:
-            console.info("Bot session verified. [dim green]CONNECTED![/]")
+            console.info("Bot  session verified. [dim green]CONNECTED![/]")
         secret.TELEGRAM_BOT_SESSION = bot_tl.session.save()
 
         namespace, secret_name = "default", "tg-auth"
@@ -205,6 +209,6 @@ class TelegramSecret(BaseModel):
 
         try:
             await wait_for(bot_tl.start(), timeout=3)
-            console.info("Bot session verified. [dim green]CONNECTED![/]")
+            console.info(" Bot session verified. [dim green]CONNECTED![/]")
         except TimeoutError:
             console.info("Bot session: [dim red]DISCONNECTED![/]")
