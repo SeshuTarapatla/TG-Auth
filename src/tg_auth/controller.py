@@ -155,7 +155,8 @@ class TelegramSecret(BaseModel):
                 )
         return secret if strict else (secret, new)
 
-    def args(self) -> None: ...
+    def model_dump_env(self) -> list[str]:
+        return [f"ENV {key}='{value}'" for key, value in self.model_dump().items()]
 
     @classmethod
     async def login(cls):
