@@ -2,6 +2,7 @@ __all__ = ["TelegramSecret"]
 
 from asyncio import wait_for
 from base64 import b64decode
+from pathlib import Path
 from re import fullmatch
 from typing import Literal, overload
 
@@ -155,6 +156,10 @@ class TelegramSecret(BaseModel):
                 )
         return secret if strict else (secret, new)
 
+    def dump_env(self, file: Path = Path("./.env")) -> None:
+        data = "\n".join(f"{key}='{value}'" for key, value in self.model_dump().items())
+        file.write_text(data)
+
     def model_dump_env(self) -> list[str]:
         return [f"ENV {key}='{value}'" for key, value in self.model_dump().items()]
 
@@ -210,6 +215,6 @@ class TelegramSecret(BaseModel):
 
         try:
             await wait_for(bot_tl.start(), timeout=3)
-            console.info(" Bot session verified. [dim green]CONNECTED![/]")
+            console.info("Bot  session verified. [dim green]CONNECTED![/]")
         except TimeoutError:
             console.info("Bot session: [dim red]DISCONNECTED![/]")
